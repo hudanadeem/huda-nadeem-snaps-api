@@ -14,7 +14,6 @@ const port = process.env.PORT || process.argv[2] || 8080;
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-// Read data from JSON files
 const photosFile = fs.readFileSync(FILE_PATH_PHOTOS);
 const tagsFile = fs.readFileSync(FILE_PATH_TAGS);
 
@@ -29,30 +28,50 @@ app.get("/photos", (req, res) => {
 // Get a single photo by id
 app.get("/photos/:id", (req, res) => {
   const photo = photos.find((p) => p.id === req.params.id);
+  if (!photo) {
+    return res.status(404).json({ error: "Photo not found" });
+  }
   res.json(photo);
 });
 
 // Get comments for a single photo by id
 app.get("/photos/:id/comments", (req, res) => {
   const photo = photos.find((p) => p.id === req.params.id);
+  if (!photo) {
+    return res.status(404).json({ error: "Photo not found" });
+  }
   res.json(photo.comments || []);
 });
 
 // Post a comment for a single photo by id
 app.post("/photos/:id/comments", (req, res) => {
-  const { name, comment } = req.body;
-  const photo = photos.find((p) => p.id === req.params.id);
-
-  const newComment = {
-    id: uuidv4(),
-    name,
-    comment,
-    date: new Date(),
-  };
-
-  photo.comments.push(newComment);
-  res.json(newComment);
-});
+  
+    const { name, comment } = req.body;  
+    const photo = photos.find((p) => p.id === req.params.id);
+  
+    if (!photo) {
+      return res.status(404).json({ error: "Photo not found" });
+    }
+  
+    const newComment = {
+      id: uuidv4(),
+      name,
+      comment,
+      date: new Date().toISOString(),
+    };
+  
+    photo.comments = photo.comments || [];
+    photo.comments.push(newComment);
+  
+    try {
+      fs.writeFileSync(FILE_PATH_PHOTOS, JSON.stringify(photos, null, 2));
+    } catch (error) {
+      console.error("Error saving file:", error);
+    }
+  
+    res.status(201).json(newComment);
+  });
+  
 
 // Get tags in an array
 app.get("/tags", (req, res) => {
