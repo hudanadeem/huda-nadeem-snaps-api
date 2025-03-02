@@ -7,12 +7,10 @@ const FILE_PATH_PHOTOS = "./data/photos.json";
 
 const photos = JSON.parse(fs.readFileSync(FILE_PATH_PHOTOS));
 
-// Get all photos
 photo_router.get("/", (req, res) => {
   res.json(photos);
 });
 
-// Get a single photo by id
 photo_router.get("/:id", (req, res) => {
   const photo = photos.find((p) => p.id === req.params.id);
   if (!photo) {
@@ -21,7 +19,6 @@ photo_router.get("/:id", (req, res) => {
   res.json(photo);
 });
 
-// Get comments for a single photo by id
 photo_router.get("/:id/comments", (req, res) => {
   const photo = photos.find((p) => p.id === req.params.id);
   if (!photo) {
@@ -30,7 +27,6 @@ photo_router.get("/:id/comments", (req, res) => {
   res.json(photo.comments || []);
 });
 
-// Post a comment for a single photo by id
 photo_router.post("/:id/comments", (req, res) => {
   const { name, comment } = req.body;
   const photo = photos.find((p) => p.id === req.params.id);
@@ -43,7 +39,7 @@ photo_router.post("/:id/comments", (req, res) => {
     id: uuidv4(),
     name,
     comment,
-    date: new Date().toISOString(),
+    timestamp: new Date().getTime(),
   };
 
   photo.comments = photo.comments || [];

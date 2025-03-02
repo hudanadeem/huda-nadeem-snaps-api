@@ -11,7 +11,6 @@ const port = process.env.PORT || process.argv[2] || 8080;
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-// Corrected routes
 app.use("/photos", photoRoute);
 app.use("/tags", tagRoute);
 
