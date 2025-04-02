@@ -1,6 +1,6 @@
 # PhotoSync
 
-The Snaps Photo Gallery application allows users to view photos, tags, and comments. The application interacts with a custom-built API to fetch and manage data. The back-end API provides endpoints to manage photo data and comments, and the front-end makes use of React to render the data in a user-friendly way.
+The Photo Gallery application allows users to view photos, tags, and comments. The application interacts with a custom-built API to fetch and manage data. The back-end API provides endpoints to manage photo data and comments, and the front-end makes use of React to render the data in a user-friendly way.
 
 ---
 
